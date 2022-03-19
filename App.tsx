@@ -1,10 +1,10 @@
-import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { StatusBar } from 'expo-status-bar';
+import React from "react";
+import { ThemeProvider } from "styled-components";
+import { StatusBar } from "expo-status-bar";
 
-import theme from './src/global/styles/theme';
+import theme from "./src/global/styles/theme";
 
-import { Home } from './src/screens/Home';
+import { Home } from "./src/screens/Home";
 
 export default function App() {
   return (
@@ -12,6 +12,5 @@ export default function App() {
       <Home />
       <StatusBar style="light" />
     </ThemeProvider>
-  )
+  );
 }
-

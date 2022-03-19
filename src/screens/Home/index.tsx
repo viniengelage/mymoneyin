@@ -1,12 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 
-import {Container} from './styles'
+import { Container } from "./styles";
 
-export function Home(){
-    return(
-        <Container>
-            <Text>Homepage</Text>
-        </Container>
-    )
+export function Home() {
+  return (
+    <Container>
+      <Text>Homepage</Text>
+    </Container>
+  );
 }
