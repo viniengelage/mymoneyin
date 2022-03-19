@@ -1,12 +1,17 @@
 import React from "react";
-import { Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import { Container } from "./styles";
+import { useTheme } from "styled-components";
+import { Container, Title } from "./styles";
 
 export function Home() {
+  const { colors } = useTheme();
+
   return (
     <Container>
-      <Text>Homepage</Text>
+      <Title>
+        My <Title style={{ color: colors.text }}>Money</Title> In
+      </Title>
     </Container>
   );
 }
