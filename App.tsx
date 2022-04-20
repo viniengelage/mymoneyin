@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import AppLoading from "expo-app-loading";
-import { StatusBar } from "expo-status-bar";
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import AppLoading from 'expo-app-loading';
+import { StatusBar } from 'expo-status-bar';
+
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 
 import {
   useFonts,
@@ -11,11 +14,12 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
-} from "@expo-google-fonts/poppins";
+} from '@expo-google-fonts/poppins';
 
-import theme from "./src/global/styles/theme";
+import theme from './src/global/styles/theme';
 
-import { Home } from "./src/screens/Home";
+import { Home } from './src/screens/Home';
+import { ExchangesProvider } from './src/hooks/exchange';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -32,8 +36,10 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Home />
-      <StatusBar style="light" />
+      <ExchangesProvider>
+        <Home />
+        <StatusBar style="light" />
+      </ExchangesProvider>
     </ThemeProvider>
   );
 }

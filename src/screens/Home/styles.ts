@@ -13,10 +13,23 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   font-family: ${props => props.theme.fonts.bold};
-  color: ${props => props.theme.colors.primary};
-  font-size: ${RFValue(36)}px;
+  color: ${props => props.theme.colors.text};
+  font-size: ${RFPercentage(4.5)}px;
+  /* font-size: ${RFValue(36)}px; */
+  /* line-height: ${RFValue(42)}px; */
 
-  margin-top: ${RFPercentage(10)}px;
+  margin-top: ${RFPercentage(6)}px;
+  text-align: center;
+`;
+
+export const Subtitle = styled.Text`
+  font-family: ${props => props.theme.fonts.bold};
+  color: ${props => props.theme.colors.text};
+  font-size: ${RFValue(24)}px;
+  line-height: ${RFValue(32)}px;
+  text-align: center;
+
+  /* margin-top: ${RFValue(8)}px; */
 `;
 
 export const ConvertedTextContainer = styled.View`
@@ -57,4 +70,23 @@ export const ConvertedValue = styled.Text`
   color: ${props => props.theme.colors.text};
   font-family: ${props => props.theme.fonts.regular};
   font-size: ${RFValue(24)}px;
+`;
+
+export const StepContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+export const StepNumber = styled.Text`
+  color: ${props => props.theme.colors.primary};
+  font-family: ${props => props.theme.fonts.bold};
+  font-size: ${RFValue(24)}px;
+`;
+export const StepText = styled.Text`
+  color: ${props => props.theme.colors.text};
+  font-family: ${props => props.theme.fonts.light};
+  font-size: ${RFValue(16)}px;
+  margin-left: ${RFValue(8)}px;
+  width: 100%;
 `;

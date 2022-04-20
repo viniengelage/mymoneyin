@@ -1,10 +1,19 @@
 {
   "expo": {
-    "name": "mymoneyin",
+    "name": "My Money In",
     "slug": "mymoneyin",
+    "icon": "./icon.png",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.viniengelage.mymoneyin",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.viniengelage.mymoneyin",
+      "versionCode": 1
+    }
   }
 }

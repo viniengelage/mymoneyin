@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
 
 import {
   Container,
@@ -18,21 +17,48 @@ import {
   ModalOptionThumbnail,
   ModalOptionThumbnailText,
   ModalOptionText,
+  ScrollView,
+  ScrollContainer,
 } from './styles';
 
-export default function Select() {
+export interface IOptionsProps {
+  id: string;
+  label: string;
+  value: string;
+  thumbnail: string;
+  desciption?: string;
+}
+
+interface ISelectProps {
+  options: IOptionsProps[];
+  onChange?(_value: string): void;
+}
+
+export default function Select({
+  options = [],
+  onChange = () => ({}),
+}: ISelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [value, setValue] = useState<IOptionsProps>({
+    id: 'null',
+    label: 'Escolha',
+    thumbnail: '?',
+    value: 'null',
+  });
 
   return (
     <>
       <Container onPress={() => setIsOpen(!isOpen)}>
         <Thumbnail>
-          <ThumbnailText>R$</ThumbnailText>
+          <ThumbnailText>{value.thumbnail}</ThumbnailText>
         </Thumbnail>
 
         <InformationSection>
-          <CurrencyName>Dólar</CurrencyName>
-          <CurrencyValue>R$ 5,42</CurrencyValue>
+          <CurrencyName>{value.label}</CurrencyName>
+          {value.desciption && (
+            <CurrencyValue>{value.desciption}</CurrencyValue>
+          )}
         </InformationSection>
 
         <Icon name="chevron-down-outline" />
@@ -52,12 +78,27 @@ export default function Select() {
               <Icon name="close-outline" onPress={() => setIsOpen(false)} />
             </ModalTitleContainer>
 
-            <ModalOptionButton>
-              <ModalOptionThumbnail>
-                <ModalOptionThumbnailText>R$</ModalOptionThumbnailText>
-              </ModalOptionThumbnail>
-              <ModalOptionText>Dólar</ModalOptionText>
-            </ModalOptionButton>
+            <ScrollView>
+              <ScrollContainer>
+                {options.map(option => (
+                  <ModalOptionButton
+                    key={option.id}
+                    onPress={() => {
+                      setValue(option);
+                      onChange(option.value);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <ModalOptionThumbnail>
+                      <ModalOptionThumbnailText>
+                        {option.thumbnail}
+                      </ModalOptionThumbnailText>
+                    </ModalOptionThumbnail>
+                    <ModalOptionText>{option.label}</ModalOptionText>
+                  </ModalOptionButton>
+                ))}
+              </ScrollContainer>
+            </ScrollView>
           </ModalContent>
         </ModalContainer>
       </Modal>

@@ -1,0 +1,3 @@
+interface IExchangeProps {
+  name: string;
+}

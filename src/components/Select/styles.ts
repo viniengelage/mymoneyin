@@ -89,6 +89,15 @@ export const ModalContent = styled.View`
   align-items: center;
 `;
 
+export const ScrollView = styled.ScrollView`
+  width: 100%;
+  margin-bottom: ${RFValue(16)}px;
+`;
+
+export const ScrollContainer = styled.View`
+  align-items: center;
+`;
+
 export const ModalTitleContainer = styled.View`
   width: 100%;
   background: ${props => props.theme.colors.primary};
@@ -110,7 +119,7 @@ export const ModalTitle = styled.Text`
 
 export const ModalOptionButton = styled.TouchableOpacity`
   width: 90%;
-  height: ${RFValue(40)}px;
+  height: ${RFValue(50)}px;
   border-radius: 3px;
   margin-top: 8px;
 
@@ -122,9 +131,9 @@ export const ModalOptionButton = styled.TouchableOpacity`
 `;
 
 export const ModalOptionThumbnail = styled.View`
-  width: ${RFValue(24)}px;
-  height: ${RFValue(24)}px;
-  border-radius: ${RFValue(12)}px;
+  width: ${RFValue(32)}px;
+  height: ${RFValue(32)}px;
+  border-radius: ${RFValue(16)}px;
 
   align-items: center;
   justify-content: center;
@@ -134,7 +143,8 @@ export const ModalOptionThumbnail = styled.View`
 export const ModalOptionThumbnailText = styled.Text`
   font-size: ${RFValue(12)}px;
   color: ${props => props.theme.colors.text};
-  font-family: ${props => props.theme.fonts.light};
+  font-family: ${props => props.theme.fonts.bold};
+  text-align: center;
 `;
 export const ModalOptionText = styled.Text`
   margin-left: 8px;

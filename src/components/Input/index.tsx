@@ -1,15 +1,22 @@
-import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+import { KeyboardAvoidingView, Platform, TextInputProps } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
 
 import { Container, InputComponent, Icon } from './styles';
 
-interface Props {
+interface Props extends TextInputProps {
   placeholder: string;
   icon: keyof typeof Ionicons.glyphMap;
+  onChangeText?(value: string): void;
 }
 
-export default function Input({ placeholder, icon }: Props) {
+export default function Input({
+  placeholder,
+  icon,
+  onChangeText = () => ({}),
+  ...rest
+}: Props) {
   const { colors } = useTheme();
 
   const [isFocused, setIsFocused] = useState(false);
@@ -22,6 +29,8 @@ export default function Input({ placeholder, icon }: Props) {
         placeholderTextColor={isFocused ? colors.text : colors.inputColorBlur}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChangeText={onChangeText}
+        {...rest}
       />
     </Container>
   );
