@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/viniengelage/mymoneyin/main/assets/md-title-logo-dark.svg" />
-</p>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/viniengelage/mymoneyin/main/assets/readme/header.svg" />
+</div>
 
 
 ## :blue_book: Sobre
