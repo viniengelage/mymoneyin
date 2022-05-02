@@ -1,19 +1,32 @@
 {
+  "name":"My Money In",
+  "displayName":"My Money In",
   "expo": {
     "name": "My Money In",
     "slug": "mymoneyin",
     "icon": "./icon.png",
+    "jsEngine": "hermes",
     "version": "1.0.0",
+    "platforms": ["ios", "android"],
     "assetBundlePatterns": [
       "**/*"
     ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode":"contain",
+      "backgroundColor":"#2A2A2A"
+    },
     "ios": {
       "bundleIdentifier": "com.viniengelage.mymoneyin",
       "buildNumber": "1.0.0"
     },
     "android": {
       "package": "com.viniengelage.mymoneyin",
-      "versionCode": 1
+      "versionCode": 2,
+      "adaptiveIcon":{
+        "foregroundImage":"./assets/icon.png",
+        "backgroundColor":"#2A2A2A"
+      }
     }
   }
 }

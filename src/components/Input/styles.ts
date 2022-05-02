@@ -7,17 +7,21 @@ interface Props {
   isFocused?: boolean;
 }
 
+export const Main = styled.TouchableWithoutFeedback`
+  padding: 24px;
+`;
+
 export const Container = styled.View`
   flex-direction: row;
   align-items: center;
 
   width: 100%;
-  height: 60px;
+  height: ${RFValue(50)}px;
 
   background: ${props => props.theme.colors.inputBlackground};
   border-radius: 3px;
-  margin-top: 16px;
   padding: 0 16px;
+  margin-top: ${RFValue(8)}px;
 `;
 
 export const InputComponent = styled.TextInput`

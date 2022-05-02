@@ -11,11 +11,11 @@ export const Container = styled.TouchableOpacity`
   justify-content: space-between;
 
   width: 100%;
-  height: 70px;
+  height: ${RFValue(60)}px;
   border-radius: 3px;
 
   padding: 0 16px;
-  margin-top: 16px;
+  margin-top: ${RFValue(8)}px;
 `;
 
 export const Thumbnail = styled.View`
@@ -127,7 +127,7 @@ export const ModalOptionButton = styled.TouchableOpacity`
   align-items: center;
   padding: 0 16px;
 
-  background: ${props => props.theme.colors.background};
+  /* background: ${props => props.theme.colors.background}; */
 `;
 
 export const ModalOptionThumbnail = styled.View`
@@ -140,6 +140,11 @@ export const ModalOptionThumbnail = styled.View`
 
   background: ${props => props.theme.colors.primary};
 `;
+export const ThumbnailImage = styled.Image`
+  width: ${RFValue(32)}px;
+  height: ${RFValue(32)}px;
+`;
+
 export const ModalOptionThumbnailText = styled.Text`
   font-size: ${RFValue(12)}px;
   color: ${props => props.theme.colors.text};

@@ -1,20 +1,42 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react';
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  Extrapolate,
+  SharedValue,
+} from 'react-native-reanimated';
 import { useTheme } from 'styled-components';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+
 import {
   Container,
   Title,
-  StepContainer,
-  StepNumber,
-  StepText,
-  Subtitle,
+  Header,
+  Content,
+  AnimatedTitle,
+  AnimatedContent,
+  ConvertedValue,
+  ConvertedValueContainer,
+  ConvertValueTitle,
+  Author,
 } from './styles';
+
+import { useExchanges } from '../../hooks/exchange';
+
+import coins from '../../utils/coins';
+import formatCurrency from '../../utils/formatCurrency';
+import parseCurrency from '../../utils/parseCurrency';
 
 import Select, { IOptionsProps } from '../../components/Select';
 import Input from '../../components/Input';
-import coins from '../../ultis/coins';
-import { useExchanges } from '../../hooks/exchange';
+import Step from '../../components/Step';
 
 interface CurrencyProps {
   name: string;
@@ -23,24 +45,23 @@ interface CurrencyProps {
 
 export function Home() {
   const { colors } = useTheme();
-  const { getRates, getConvertRate } = useExchanges();
+  const { getConvertRate } = useExchanges();
 
-  const [fromCurrency, setFromCurrency] = useState<CurrencyProps>({
-    name: 'Dinheiro',
-    code: 'IDK',
-  });
+  const [fromCurrency, setFromCurrency] = useState<CurrencyProps>(
+    {} as CurrencyProps,
+  );
   const [toCurrency, setToCurrency] = useState<CurrencyProps>(
     {} as CurrencyProps,
   );
   const [rate, setRate] = useState<number>(0);
-  const [inputValue, setInputValue] = useState<string>('');
-  const [convertedValue, setConvertedValue] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+  const [convertedValue, setConvertedValue] = useState<number>();
+  const [showAuthor, setShowAuthor] = useState<boolean>(true);
 
-  const [toCurrencyOptions, setToCurrencyOptions] = useState<IOptionsProps[]>(
-    [],
-  );
+  const titlePosition = useSharedValue(-30);
+  const sectionPosition = useSharedValue(90);
 
-  const fromCurrencyOptions = useMemo(() => {
+  const currencyOptions = useMemo(() => {
     const options: IOptionsProps[] = [];
 
     coins.map(coin =>
@@ -48,146 +69,159 @@ export function Home() {
         id: coin.code,
         label: coin.description,
         value: coin.code,
-        thumbnail: coin.code,
+        thumbnail: coin.image,
       }),
     );
 
     return options;
   }, []);
 
-  const formatCurrency = useCallback((code: string, value: number) => {
-    const { format } = new Intl.NumberFormat([], {
-      style: 'currency',
-      currency: code,
-    });
+  const handleSelectFromCurrency = useCallback((value: string) => {
+    const currency = coins.find(coin => coin.code === value);
 
-    return format(value);
+    if (currency) {
+      setFromCurrency({
+        name: currency.description,
+        code: currency.code,
+      });
+    }
   }, []);
 
-  const handleOnSelectBaseCoin = useCallback(
-    async fromCurrencyData => {
-      const findedCurrency = coins.find(coin => coin.code === fromCurrencyData);
+  const handleSelectToCurrency = useCallback((value: string) => {
+    const currency = coins.find(coin => coin.code === value);
 
-      if (findedCurrency) {
-        setFromCurrency({
-          name: findedCurrency?.description,
-          code: findedCurrency?.code,
-        });
-      }
+    if (currency) {
+      setToCurrency({
+        name: currency.description,
+        code: currency.code,
+      });
+    }
+  }, []);
 
-      setToCurrencyOptions([]);
-
-      const rates = await getRates(fromCurrencyData);
-
-      const options: IOptionsProps[] = [];
-
-      coins.map(coin =>
-        options.push({
-          id: coin.code,
-          value: coin.code,
-          label: coin.description,
-          thumbnail: coin.code,
-          desciption: formatCurrency(fromCurrencyData, rates[coin.code]),
-        }),
+  useEffect(() => {
+    if (fromCurrency && toCurrency) {
+      getConvertRate(fromCurrency.code, toCurrency.code).then(response =>
+        setRate(response),
       );
+    }
+  }, [getConvertRate, fromCurrency, toCurrency]);
 
-      setToCurrencyOptions(options);
+  useEffect(() => {
+    if (rate && amount) {
+      setConvertedValue(parseFloat(amount) * rate);
+    }
+  }, [amount, rate]);
+
+  const opacityInterpolate = useCallback(
+    ({ value }: SharedValue<number>, position: number) => {
+      'worklet';
+
+      return {
+        opacity: interpolate(value, [position, 0], [0, 1], Extrapolate.CLAMP),
+      };
     },
-    [getRates, formatCurrency],
+    [],
   );
 
-  const handleOnSelectConvertedCurrency = useCallback(
-    async toCurrencyData => {
-      const findedCurrency = coins.find(coin => coin.code === toCurrencyData);
-
-      if (findedCurrency) {
-        setToCurrency({
-          name: findedCurrency?.description,
-          code: findedCurrency?.code,
+  useEffect(() => {
+    titlePosition.value = withTiming(
+      0,
+      {
+        duration: 500,
+      },
+      () => {
+        sectionPosition.value = withTiming(0, {
+          duration: 800,
         });
-      }
+      },
+    );
+  }, [titlePosition, sectionPosition]);
 
-      const convertRate = await getConvertRate(
-        fromCurrency.code,
-        toCurrencyData,
-      );
+  const titleStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: titlePosition.value }],
+      opacity: interpolate(
+        titlePosition.value,
+        [-30, 0],
+        [0, 1],
+        Extrapolate.CLAMP,
+      ),
+    };
+  });
 
-      setRate(convertRate);
-    },
-    [fromCurrency, getConvertRate],
+  const sectionStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: sectionPosition.value }],
+    };
+  });
+
+  const selectFromCurrencyStyle = useAnimatedStyle(() =>
+    opacityInterpolate(sectionPosition, 30),
   );
 
-  const handleConvertValue = useCallback(
-    (value: string) => {
-      const formatedValue = value
-        .replace(/\D/g, '')
-        .replace(/(\d)(\d{2})$/, '$1.$2');
+  const inputAmountStyle = useAnimatedStyle(() =>
+    opacityInterpolate(sectionPosition, 60),
+  );
 
-      const floatValue = parseFloat(formatedValue);
-
-      const parsedValue = formatCurrency(toCurrency.code, floatValue * rate);
-
-      setInputValue(formatedValue);
-      setConvertedValue(parsedValue);
-    },
-    [rate, formatCurrency, toCurrency],
+  const inputStyle3 = useAnimatedStyle(() =>
+    opacityInterpolate(sectionPosition, 90),
   );
 
   return (
-    <Container>
-      <Title>
-        Meu <Title style={{ color: colors.primary }}>{fromCurrency.name}</Title>{' '}
-        Em
-      </Title>
-      {Object.keys(toCurrency).length > 0 && (
-        <Subtitle>
-          <Subtitle style={{ color: colors.primary }}>
-            {toCurrency.name}
-          </Subtitle>{' '}
-          é{' '}
-          <Subtitle style={{ color: colors.primary }}>
-            {convertedValue}
-          </Subtitle>
-        </Subtitle>
-      )}
+    <Container behavior="padding">
+      <Header>
+        <AnimatedTitle style={titleStyle}>
+          My <Title style={{ color: colors.primary }}>Money</Title> In
+        </AnimatedTitle>
+      </Header>
 
-      <StepContainer>
-        <StepNumber>1º</StepNumber>
-        <StepText>Escolha a moeda para conversão</StepText>
-      </StepContainer>
+      <Content>
+        {convertedValue && (
+          <>
+            <ConvertValueTitle>Valor de conversão</ConvertValueTitle>
+            <ConvertedValueContainer>
+              <ConvertedValue style={{ color: colors.primary }}>
+                {formatCurrency(toCurrency.code, convertedValue)}
+              </ConvertedValue>
+            </ConvertedValueContainer>
+          </>
+        )}
 
-      <Select options={fromCurrencyOptions} onChange={handleOnSelectBaseCoin} />
+        <AnimatedContent style={sectionStyle}>
+          <Animated.View style={selectFromCurrencyStyle}>
+            <Step number={1} text="Converter de" />
+            <Select
+              options={currencyOptions}
+              onChange={handleSelectFromCurrency}
+            />
+          </Animated.View>
 
-      {toCurrencyOptions.length > 0 && (
-        <>
-          <StepContainer style={{ marginTop: RFValue(16) }}>
-            <StepNumber>2º</StepNumber>
-            <StepText>Escolha a moeda que vai ser convertida</StepText>
-          </StepContainer>
+          <Animated.View style={inputAmountStyle}>
+            <Step number={2} text="Valor para conversão" />
+            <Input
+              icon="pricetag-outline"
+              placeholder="Valor"
+              keyboardType="number-pad"
+              onChangeText={value => setAmount(parseCurrency(value))}
+              value={amount.toString()}
+              onFocus={() => setShowAuthor(false)}
+              onBlur={() => setShowAuthor(true)}
+            />
+          </Animated.View>
 
-          <Select
-            options={toCurrencyOptions}
-            onChange={handleOnSelectConvertedCurrency}
-          />
-        </>
-      )}
-
-      {rate !== 0 && (
-        <>
-          <StepContainer style={{ marginTop: RFValue(16) }}>
-            <StepNumber>3º</StepNumber>
-            <StepText>Digite o valor</StepText>
-          </StepContainer>
-
-          <Input
-            icon="pricetag-outline"
-            placeholder="Valor"
-            keyboardType="number-pad"
-            onChangeText={handleConvertValue}
-            value={inputValue}
-          />
-        </>
-      )}
+          <Animated.View style={inputStyle3}>
+            <Step number={3} text="Converter para" />
+            <Select
+              options={currencyOptions}
+              onChange={handleSelectToCurrency}
+              description={
+                toCurrency.code && formatCurrency(toCurrency.code, rate)
+              }
+            />
+          </Animated.View>
+        </AnimatedContent>
+      </Content>
+      {showAuthor && <Author>Crafted by Vinicios Engelage</Author>}
     </Container>
   );
 }

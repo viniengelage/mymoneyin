@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
 
 import 'intl';
@@ -20,6 +19,7 @@ import theme from './src/global/styles/theme';
 
 import { Home } from './src/screens/Home';
 import { ExchangesProvider } from './src/hooks/exchange';
+import SplashScreen from './src/components/Splash';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -31,7 +31,12 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return (
+      <ThemeProvider theme={theme}>
+        <StatusBar style="light" />
+        <SplashScreen />
+      </ThemeProvider>
+    );
   }
 
   return (

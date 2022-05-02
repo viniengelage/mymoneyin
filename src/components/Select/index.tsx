@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import select from '../../assets/images/select';
 
 import {
   Container,
@@ -16,6 +17,7 @@ import {
   ModalOptionButton,
   ModalOptionThumbnail,
   ModalOptionThumbnailText,
+  ThumbnailImage,
   ModalOptionText,
   ScrollView,
   ScrollContainer,
@@ -27,15 +29,18 @@ export interface IOptionsProps {
   value: string;
   thumbnail: string;
   desciption?: string;
+  color?: string;
 }
 
 interface ISelectProps {
   options: IOptionsProps[];
+  description?: string;
   onChange?(_value: string): void;
 }
 
 export default function Select({
   options = [],
+  description,
   onChange = () => ({}),
 }: ISelectProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,22 +48,18 @@ export default function Select({
   const [value, setValue] = useState<IOptionsProps>({
     id: 'null',
     label: 'Escolha',
-    thumbnail: '?',
+    thumbnail: select,
     value: 'null',
   });
 
   return (
     <>
       <Container onPress={() => setIsOpen(!isOpen)}>
-        <Thumbnail>
-          <ThumbnailText>{value.thumbnail}</ThumbnailText>
-        </Thumbnail>
+        <ThumbnailImage source={{ uri: value.thumbnail }} />
 
         <InformationSection>
           <CurrencyName>{value.label}</CurrencyName>
-          {value.desciption && (
-            <CurrencyValue>{value.desciption}</CurrencyValue>
-          )}
+          {description && <CurrencyValue>{description}</CurrencyValue>}
         </InformationSection>
 
         <Icon name="chevron-down-outline" />
@@ -89,11 +90,11 @@ export default function Select({
                       setIsOpen(false);
                     }}
                   >
-                    <ModalOptionThumbnail>
-                      <ModalOptionThumbnailText>
-                        {option.thumbnail}
-                      </ModalOptionThumbnailText>
-                    </ModalOptionThumbnail>
+                    {/* <ModalOptionThumbnail
+                        style={{ backgroundColor: option.color }}
+                      > */}
+                    <ThumbnailImage source={{ uri: option.thumbnail }} />
+                    {/* </ModalOptionThumbnail> */}
                     <ModalOptionText>{option.label}</ModalOptionText>
                   </ModalOptionButton>
                 ))}
