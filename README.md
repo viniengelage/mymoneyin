@@ -5,12 +5,16 @@
 
 
 ## 📖 Sobre
-<div style="display: inline_block" align="center">
-<div>
 MyMoneyIn é uma aplicação mobile para conversão de moedas criada em ReactNative, desenvolvido para fins de estudos e coisas aprendidas durante o tempo, então é um projeto quem sempre estará sendo atualizado.
-</div>
-<img
-align="center" src="https://raw.githubusercontent.com/viniengelage/mymoneyin/main/assets/readme/screen.png"/>
+
+## 📱 Telas
+<div align="center">
+	<img
+	align="center"
+	width="200"
+	style="float: right;"
+	src="https://raw.githubusercontent.com/viniengelage/mymoneyin/main/assets/readme/screen.png"
+	/>
 </div>
 
 ##  🤖 Tecnologias
